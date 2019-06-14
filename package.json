@@ -1,0 +1,19 @@
+{
+  "name": "eth-cljs",
+  "version": "0.1.0",
+  "description": "",
+  "author": "sirromdev@gmail.com",
+  "main": "index.js",
+  "scripts": {
+    "watch": "shadow-cljs watch app",
+    "compile": "shadow-cljs compile app",
+    "build": "shadow-cljs release app"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "devDependencies": {
+    "shadow-cljs": "^2.8.0",
+    "source-map-support": "^0.5.10",
+    "ws": "^6.1.2"
+  }
+}
