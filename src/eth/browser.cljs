@@ -1,13 +1,12 @@
-
-(ns server.main)
+(ns eth.browser)
 
 (def value-a 1)
 
 (defonce value-b 2)
 
-(defn reload! []
+(defn reload []
   (println "Code updated.")
   (println "Trying values:" value-a value-b))
 
-(defn main! []
-  (println "App loaded!"))
+(defn init []
+  (println "Browser loaded!"))

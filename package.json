@@ -5,9 +5,12 @@
   "author": "sirromdev@gmail.com",
   "main": "index.js",
   "scripts": {
-    "watch": "shadow-cljs watch app",
-    "compile": "shadow-cljs compile app",
-    "build": "shadow-cljs release app"
+    "watch-npm": "rm -rf target/npm && mkdir target/npm && shadow-cljs watch npm",
+    "compile-npm": "shadow-cljs compile npm",
+    "build-npm": "shadow-cljs release npm",
+    "repl-npm": "shadow-cljs cljs-repl npm",
+    "watch-browser": "rm -rf target/browser && mkdir target/browser && cp ./assets/index.html target/browser && shadow-cljs watch browser",
+    "repl-browser": "shadow-cljs cljs-repl browser"
   },
   "keywords": [],
   "license": "MIT",
