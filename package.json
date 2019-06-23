@@ -5,10 +5,10 @@
   "author": "sirromdev@gmail.com",
   "main": "index.js",
   "scripts": {
-    "watch-npm": "rm -rf target/npm && mkdir target/npm && shadow-cljs watch npm",
-    "compile-npm": "shadow-cljs compile npm",
-    "build-npm": "shadow-cljs release npm",
-    "repl-npm": "shadow-cljs cljs-repl npm",
+    "watch-lib": "rm -rf target/lib && mkdir target/lib && shadow-cljs watch lib",
+    "compile-lib": "shadow-cljs compile lib",
+    "build-lib": "shadow-cljs release lib",
+    "repl-lib": "shadow-cljs cljs-repl lib",
     "watch-browser": "rm -rf target/browser && mkdir target/browser && cp ./assets/index.html target/browser && shadow-cljs watch browser",
     "repl-browser": "shadow-cljs cljs-repl browser"
   },

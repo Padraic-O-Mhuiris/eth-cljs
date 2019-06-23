@@ -1,9 +1,8 @@
-
 {:source-paths ["src"]
  :dependencies [[cider/cider-nrepl "0.21.0"]]
  :dev-http {8080 "target/browser"}
- :builds {:npm {:target :npm-module
-                :output-dir "target/npm"}
+ :builds {:lib {:target :npm-module
+                :output-dir "target/lib"}
           :browser {:target :browser
                     :output-dir "target/browser"
                     :asset-path "."

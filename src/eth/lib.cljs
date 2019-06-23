@@ -1,5 +1,5 @@
-(ns eth.browser
+(ns eth.lib
   (:require [eth.main :refer [start]]))
 
 (defn init []
-  (start "browser"))
+  (start "lib"))
