@@ -10,7 +10,8 @@
     "build-lib": "shadow-cljs release lib",
     "repl-lib": "shadow-cljs cljs-repl lib",
     "watch-browser": "rm -rf target/browser && mkdir target/browser && cp ./assets/index.html target/browser && shadow-cljs watch browser",
-    "repl-browser": "shadow-cljs cljs-repl browser"
+    "repl-browser": "shadow-cljs cljs-repl browser",
+    "testchain": "./node_modules/.bin/ganache-cli"
   },
   "keywords": [],
   "license": "MIT",
@@ -18,5 +19,8 @@
     "shadow-cljs": "^2.8.0",
     "source-map-support": "^0.5.10",
     "ws": "^6.1.2"
+  },
+  "dependencies": {
+    "ganache-cli": "^6.4.4"
   }
 }
