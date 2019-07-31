@@ -1,11 +1,17 @@
-{:source-paths ["src"]
+{:source-paths ["src/main" "src/test"]
  :dependencies [[cider/cider-nrepl "0.21.0"]
-                [cljs-http "0.1.46"]]
+                [cljs-http "0.1.46"]
+                [binaryage/devtools "0.9.10"]]
  :dev-http {8080 "target/browser"}
- :builds {:lib {:target :npm-module
-                :output-dir "target/lib"}
+ :builds {:node {:target :node-script
+                 :main eth.node/init
+                 :output-to "target/node/out.js"}
           :browser {:target :browser
                     :output-dir "target/browser"
                     :asset-path "."
                     :modules {:main {:init-fn eth.browser/init}}
-                    :devtools {:after-load eth.browser/init}}}}
+                    :devtools {:after-load eth.browser/init}}
+          :test {:target :node-test
+                 :output-to "target/test/node-test.js"
+                 :ns-regexp "-spec$"
+                 :autorun true}}}

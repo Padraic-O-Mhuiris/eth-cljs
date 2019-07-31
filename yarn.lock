@@ -956,6 +956,11 @@ ws@^6.1.2:
   dependencies:
     async-limiter "~1.0.0"
 
+xhr2@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/xhr2/-/xhr2-0.2.0.tgz#eddeff782f3b7551061b8d75645085269396e521"
+  integrity sha512-BDtiD0i2iKPK/S8OAZfpk6tyzEDnKKSjxWHcMBVmh+LuqJ8A32qXTyOx+TVOg2dKvq6zGBq2sgKPkEeRs1qTRA==
+
 xtend@^4.0.0:
   version "4.0.1"
   resolved "https://registry.npmjs.org/xtend/-/xtend-4.0.1.tgz#a5c6d532be656e23db820efb943a1f04998d63af"
