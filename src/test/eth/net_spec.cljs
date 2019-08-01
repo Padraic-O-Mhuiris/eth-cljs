@@ -9,38 +9,65 @@
   [x]
   (satisfies? cljs.core.async.impl.protocols/Channel x))
 
-(def err-status-code
+(def err-status
   "Error: net - response code 0")
-(def err-res-msg
+(def err-msg
   "Error: net - msg error")
+
+(def mock-success-response
+  {:status 200
+   :success true,
+   :body {:id 0,
+          :jsonrpc "2.0",
+          :result "1"},
+   :error-code :no-error,
+   :error-text ""})
+
+(def mock-err-msg-response
+  {:status 200,
+   :success true,
+   :body {:id 0,
+          :jsonrpc "2.0",
+          :error {:message "msg error", :code -32000,}}
+   :error-code :no-error,
+   :error-text ""})
+
+(def mock-err-status-response
+  {:status 0,
+   :success false,
+   :body nil,
+   :headers {},
+   :error-code :http-error,
+   :error-text " [0]"})
 
 (defn error? [x]
   (or (instance? js/Error x)
       (instance? (.-Error js/global) x)))
 
+(defn juxtapose?
+  [a b]
+  (= (str a) (str b)))
+
 (deftest response-status-err-test
   (testing "net/response-status-err should"
-    (let [err (net/response-status-err {:status 0})]
+    (let [err (net/response-status-err mock-err-status-response)]
       (testing "return error object"
         (is (error? err)))
       (testing "prints correct message"
-        (is (= (str err) err-status-code))))))
+        (is (juxtapose? err err-status))))))
 
 (deftest response-msg-err-test
   (testing "net/response-msg-err should"
-    (let [err (net/response-msg-err
-               {:body
-                {:error
-                 {:message "msg error"}}})]
+    (let [err (net/response-msg-err mock-err-msg-response)]
       (testing "return error object"
         (is (error? err)))
       (testing "prints correct message"
-        (is (= (str err) err-res-msg))))))
+        (is (juxtapose? err err-msg))))))
 
 (deftest response-status-err?-test
   (testing "net/response-status-err? should"
-    (let [res1 (net/response-status-err? {:status 200})
-          res2 (net/response-status-err? {:status 1})]
+    (let [res1 (net/response-status-err? mock-success-response)
+          res2 (net/response-status-err? mock-err-status-response)]
       (testing "return false for status 200"
         (is (false? res1)))
       (testing "return true for non-200 status code"
@@ -48,8 +75,8 @@
 
 (deftest response-msg-err?-test
   (testing "net/response-msg-err? should"
-    (let [res1 (net/response-msg-err? {:body {:status ""}})
-          res2 (net/response-msg-err? {:body {:error ""}})]
+    (let [res1 (net/response-msg-err? mock-success-response)
+          res2 (net/response-msg-err? mock-err-msg-response)]
       (testing "return false if no :error key exists in message body"
         (is (false? res1)))
       (testing "return true for :error key exists in message body"
@@ -57,7 +84,17 @@
 
 (deftest handle-rpc-error-test
   (testing "net/handle-rpc-error should"
-    ))
+    (let [res1 (net/handle-rpc-error mock-success-response)
+          res2 (net/handle-rpc-error mock-err-status-response)
+          res3 (net/handle-rpc-error mock-err-msg-response)]
+      (testing "return response if success"
+        (is (= res1 mock-success-response)))
+      (testing "return status error if response status does not equal 200"
+        (is (error? res2))
+        (is (juxtapose? res2 err-status)))
+      (testing "return msg error if response body contains error"
+        (is (error? res3))
+        (is (juxtapose? res3 err-msg))))))
 ;; (deftest rpc-chan-test
 ;;   (async done
 ;;          (go

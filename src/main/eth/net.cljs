@@ -3,12 +3,10 @@
    [cljs.core.async.macros :refer [go]])
   (:require
    [eth.db :as db]
+   [eth.util :refer [log]]
    [cljs-http.client :as http]
    [eth.macros :refer [<?]]
    [cljs.core.async :refer [<! >! chan]]))
-
-(defn log [s]
-  (println (str s)))
 
 (defn response-status-err [res]
   (js/Error (str "net - response code " (:status res))))
@@ -74,10 +72,6 @@
   (go
     (rpc "web3_clientVersion")
     (<! rpc-chan)))
-
-(defn log-block []
-  (go
-    (log (<! (client-version)))))
 
 (defn init []
   (println "initialising net"))
