@@ -3,7 +3,7 @@
    [cljs.core.async.macros :refer [go]])
   (:require
    [eth.db :as db]
-   [eth.util :refer [log]]
+   [eth.util :refer [log error?]]
    [cljs-http.client :as http]
    [eth.macros :refer [<?]]
    [cljs.core.async :refer [<! >! chan]]))

@@ -11,3 +11,7 @@
   [f]
   (go
     (log (<! (f)))))
+
+(defn error? [x]
+  (or (instance? js/Error x)
+      (instance? (.-Error js/global) x)))

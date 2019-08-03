@@ -3,6 +3,8 @@
    [cljs.core.async.macros :refer [go]])
   (:require [cljs.test :refer (deftest is async testing)]
             [eth.net :as net]
+            [eth.db :as db]
+            [eth.util :refer [error?]]
             [cljs.core.async :refer [<! >!]]))
 
 (defn channel?
@@ -19,7 +21,7 @@
    :success true,
    :body {:id 0,
           :jsonrpc "2.0",
-          :result "1"},
+          :result "0x1"},
    :error-code :no-error,
    :error-text ""})
 
@@ -39,10 +41,6 @@
    :headers {},
    :error-code :http-error,
    :error-text " [0]"})
-
-(defn error? [x]
-  (or (instance? js/Error x)
-      (instance? (.-Error js/global) x)))
 
 (defn juxtapose?
   [a b]
@@ -95,36 +93,38 @@
       (testing "return msg error if response body contains error"
         (is (error? res3))
         (is (juxtapose? res3 err-msg))))))
-;; (deftest rpc-chan-test
-;;   (async done
-;;          (go
-;;            (testing "net/rpc-chan"
-;;              (let [old-id @net/rpc-id]
-;;                (>! net/rpc-chan {:body {:result "123"}})
-;;                (testing "should pull result from response"
-;;                  (is (= (<! net/rpc-chan) "123")))
-;;                (testing "should increment rpc-id"
-;;                  (is (= (+ old-id 1) @net/rpc-id)))
-;;                (done))))))
 
-;; (deftest build-rpc-opts-test
-;;   (testing "net/build-rpc-opts should"
-;;     (let [opts-1 (net/build-rpc-opts "fake-method")
-;;           opts-2 (net/build-rpc-opts "fake-method" 1 2 3)
-;;           opts-3 (net/build-rpc-opts "fake-method" nil)]
-;;       (testing "return correct json-params calling single method"
-;;         (is (= (get-in opts-1 [:json-params :jsonrpc]) "2.0"))
-;;         (is (= (get-in opts-1 [:json-params :params]) []))
-;;         (is (= (get-in opts-1 [:json-params :id])) @net/rpc-id))
-;;       (testing "return correct json-params calling method + params"
-;;         (is (= (get-in opts-2 [:json-params :jsonrpc]) "2.0"))
-;;         (is (= (get-in opts-2 [:json-params :params]) [1 2 3]))
-;;         (is (= (get-in opts-2 [:json-params :id]) @net/rpc-id)))
-;;       (testing "return correct json-params calling method + nil param"
-;;         (is (= (get-in opts-3 [:json-params :jsonrpc]) "2.0"))
-;;         (is (= (get-in opts-3 [:json-params :params]) []))
-;;         (is (= (get-in opts-3 [:json-params :id]) @net/rpc-id)))
-;;       (testing "return a channel in both cases"
-;;         (is (channel? (:channel opts-1)))
-;;         (is (channel? (:channel opts-2)))
-;;         (is (channel? (:channel opts-3)))))))
+(deftest handle-rpc-success-test
+  (testing "net/handle-rpc-success should"
+    (let [id1 (:rpc-id @db/state)
+          res1 (net/handle-rpc-success mock-success-response)]
+      (testing "return response result from body if input success"
+        (is (= res1 "0x1")))
+      (testing "increment state rpc-id if input success"))))
+
+(deftest raw-response-chan-test
+  (async done
+         (go
+           (testing "net/raw-response-chan should"
+             (testing "be a channel"
+               (is (channel? net/raw-response-chan)))
+             (testing "passthrough successful http responses"
+               (>! net/raw-response-chan mock-success-response)
+               (is (not (error? (<! net/raw-response-chan)))))
+             (testing "transduce erroneous http responses as error objects"
+               (>! net/raw-response-chan mock-err-status-response)
+               (is (error? (<! net/raw-response-chan)))
+               (>! net/raw-response-chan mock-err-msg-response)
+               (is (error? (<! net/raw-response-chan))))
+             (done)))))
+
+(deftest rpc-chan-test
+  (async done
+         (go
+           (testing "net/rpc-chan should"
+             (testing "be a channel"
+               (is (channel? net/rpc-chan)))
+             (testing "return result from http responses"
+               (>! net/rpc-chan mock-success-response)
+               (is (= "0x1" (<! net/rpc-chan))))
+             (done)))))
