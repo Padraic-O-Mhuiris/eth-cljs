@@ -1,22 +1,31 @@
 (ns eth.api
-  (:require-macros
-   [cljs.core.async.macros :refer [go]])
   (:require
+   [eth.db :as db]
    [eth.net :refer [rpc]]
-   [eth.channels :as chan]
-   [cljs.core.async :refer [<!]]))
+   [eth.macros :refer [defeth]]
+   [eth.transducers :refer [check-http-status
+                            check-http-message
+                            convert-integer]]))
+(def handle-http-request
+  (comp check-http-status
+        check-http-message))
 
-(defn block-number []
-  (go
-    (rpc "eth_blockNumber")
-    (int (<! chan/result))))
+(defeth block-number []
+  (rpc "eth_blockNumber" (db/url) (comp handle-http-request
+                                        convert-integer)))
 
-(defn net-listening? []
-  (go
-    (rpc "net_listening")
-    (<! chan/result)))
+(defeth net-listening? []
+  (rpc "net_listening" (db/url) handle-http-request))
 
-(defn client-version []
-  (go
-    (rpc "web3_clientVersion")
-    (<! chan/result)))
+(defeth network-id []
+  (rpc "net_version" (db/url) (comp handle-http-request
+                                    convert-integer)))
+;; (defn client-version []
+;;   (go
+;;     (rpc "web3_clientVersion")
+;;     (<! chan/result)))
+
+;; (defn fake-call []
+;;   (go
+;;     (rpc "xoxox")
+;;     (<! chan/result)))

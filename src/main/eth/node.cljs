@@ -5,5 +5,8 @@
 ;; workaround for dealing with http requests when the library is ran in node.js
 (set! js/XMLHttpRequest xhr2)
 
+(def configuration {:url "http://localhost:8545"
+                    :preset "test"})
+
 (defn init []
-  (start "node"))
+  (start configuration))

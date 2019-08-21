@@ -12,7 +12,7 @@
     "run-node": "node target/node/out.js",
     "watch-browser": "rm -rf target/browser && mkdir target/browser && cp ./assets/index.html target/browser && shadow-cljs watch browser",
     "repl-browser": "shadow-cljs cljs-repl browser",
-    "testchain": "./node_modules/.bin/ganache-cli",
+    "testchain": "./node_modules/.bin/ganache-cli -b 10 -i 999",
     "test": "rm -rf target/test && mkdir target/test && shadow-cljs compile test && node target/test/node-test.js"
   },
   "keywords": [],

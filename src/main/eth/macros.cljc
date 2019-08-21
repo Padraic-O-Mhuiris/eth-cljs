@@ -1,5 +1,4 @@
 (ns eth.macros)
 
-(defmacro <?
-  [ch]
-  `(throw-err (cljs.core.async/<! ~ch)))
+(defmacro defeth [name args body]
+  `(def ~name (fn ~args (system-check ~body))))

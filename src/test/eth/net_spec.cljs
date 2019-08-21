@@ -35,7 +35,7 @@
 (defn test-build-rpc-opts-id []
   (let [rpc-id1 (:rpc-id @db/state)
         opts-id1 (get-in (net/build-rpc-opts "abc123") [:json-params :id])
-        rpc-id2 (do (db/inc-rpc-id)
+        rpc-id2 (do (db/inc-rpc-id!)
                     (:rpc-id @db/state))
         opts-id2 (get-in (net/build-rpc-opts "abc123") [:json-params :id])]
     (testing ":id should inherit from rpc-id of state"
