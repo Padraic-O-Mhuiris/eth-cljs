@@ -1,6 +1,8 @@
 (ns eth.util
   (:require
-   [eth.db :as db]))
+   [eth.db :as db]
+   [cljs.reader :refer [read-string]]
+   [bignumber.js :as bn]))
 
 (defn channel?
   [x]
@@ -16,3 +18,9 @@
 
 (defn preset->net-id [name]
   ((keyword name) db/presets))
+
+(defn string->number [x]
+  (read-string x))
+
+(defn cast-bn [x]
+  (bn. x))

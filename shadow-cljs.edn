@@ -1,6 +1,8 @@
 {:source-paths ["src/main" "src/test"]
  :dependencies [[cider/cider-nrepl "0.21.0"]
                 [cljs-http "0.1.46"]
+                [cljsjs/bignumber "4.1.0-0"]
+                [district0x/bignumber "1.0.3"]
                 [binaryage/devtools "0.9.10"]]
  :dev-http {8080 "target/browser"}
  :builds {:node {:target :node-script

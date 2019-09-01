@@ -2,30 +2,48 @@
   (:require
    [eth.db :as db]
    [eth.net :refer [rpc]]
-   [eth.macros :refer [defeth]]
    [eth.transducers :refer [check-http-status
                             check-http-message
-                            convert-integer]]))
-(def handle-http-request
-  (comp check-http-status
-        check-http-message))
+                            convert-number
+                            convert-bn
+                            convert-wei
+                            convert-gwei
+                            convert-unit
+                            infer-client-name]]))
 
-(defeth block-number []
-  (rpc "eth_blockNumber" (db/url) (comp handle-http-request
-                                        convert-integer)))
+(def LATEST "latest")
 
-(defeth net-listening? []
-  (rpc "net_listening" (db/url) handle-http-request))
+(defn block-number []
+  (rpc "eth_blockNumber" (db/url) convert-number))
 
-(defeth network-id []
-  (rpc "net_version" (db/url) (comp handle-http-request
-                                    convert-integer)))
-;; (defn client-version []
-;;   (go
-;;     (rpc "web3_clientVersion")
-;;     (<! chan/result)))
+(defn net-listening? []
+  (rpc "net_listening" (db/url)))
 
-;; (defn fake-call []
-;;   (go
-;;     (rpc "xoxox")
-;;     (<! chan/result)))
+(defn network-id []
+  (rpc "net_version" (db/url) convert-number))
+
+(defn client-version []
+  (rpc "web3_clientVersion" (db/url) infer-client-name))
+
+(defn peer-count []
+  (rpc "net_peerCount" (db/url) convert-number))
+
+(defn gas-price []
+  (rpc "eth_gasPrice" (db/url) (comp convert-bn
+                                     convert-gwei)))
+
+(defn eth-balance
+  ([address]
+   (eth-balance address LATEST))
+  ([address block]
+   (rpc "eth_getBalance"
+        (db/url)
+        (comp convert-bn
+              convert-unit)
+        address
+        block)))
+
+(defn block
+  ([] (block LATEST true))
+  ([number full-tx]
+   (rpc "eth_getBlockByNumber" (db/url) nil number full-tx)))

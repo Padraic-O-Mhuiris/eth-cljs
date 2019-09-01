@@ -23,6 +23,8 @@
     "ws": "^6.1.2"
   },
   "dependencies": {
+    "bignumber.js": "^9.0.0",
+    "decimal.js": "^10.2.0",
     "ganache-cli": "^6.4.4",
     "xhr2": "^0.2.0"
   }

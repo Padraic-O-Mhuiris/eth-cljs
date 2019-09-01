@@ -1,8 +1,12 @@
 (ns eth.browser
   (:require [eth.main :refer [start]]))
 
-(def configuration {:url "http://localhost:8545"
-                    :preset "test"})
+(def urls {:test "http://localhost:8545"
+           :kovan "https://kovan.infura.io/v3/beabcde3dcb04fb0838ff6b3a1af9805"
+           :main "https://mainnet.infura.io/v3/beabcde3dcb04fb0838ff6b3a1af9805"})
+
+(def configuration {:url (:main urls)
+                    :preset "main"})
 
 (defn init []
   (start configuration))

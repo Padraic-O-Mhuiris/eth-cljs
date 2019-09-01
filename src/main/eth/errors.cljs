@@ -22,7 +22,16 @@
 
 (def topics
   {:CONFIG "configuration"
-   :NET "network"})
+   :NET "eth.net"
+   :DATABASE "eth.db"})
+
+(defn detect-client-version [input]
+  {:action (:WARN actions)
+   :topic (:DATABASE topics)
+   :error (str "Could not detect client type for node at "
+               (db/url)
+               ". Response was: "
+               input)})
 
 (defn system-uninitialized []
   {:action (:MISTAKE actions)
@@ -33,12 +42,16 @@
   {:action (:FAILURE actions)
    :topic (:CONFIG topics)
    :error (str "The node at "
-               (db/url)
-               " responded with a network id "
-               id
+               (if (zero? (count (db/url)))
+                 "<NIL>"
+                 (db/url))
+               " responded with a network id: "
+               (if (number? id)
+                 id
+                 "<NIL>")
                " which conflicts with expected "
                (db/preset)
-               "network id: "
+               " network id: "
                (util/preset->net-id (db/preset)))})
 
 (defn http-status [res]
@@ -48,10 +61,15 @@
                (:status res)
                ". Is the node active?")})
 
-(defn http-message [res]
+(defn http-message-error [res]
   {:action (:MISTAKE actions)
    :topic (:NET topics)
    :error (get-in res [:body :error :message])})
+
+(defn http-no-result [res]
+  {:action (:MISTAKE actions)
+   :topic (:NET topics)
+   :error "No result contained in body of response"})
 
 (defn response->id [res]
   {:action (:WARN actions)
