@@ -3,7 +3,7 @@
    [eth.errors :as errors]
    [eth.util :refer [error?
                      string->number
-                     cast-bn]]
+                     ->bn]]
    [eth.db :as db]
    [eth.channels :refer [error-chan]]
    [cljs.core.async :refer [put!]]
@@ -53,7 +53,7 @@
       ([] (rf))
       ([result] (rf result))
       ([result input]
-       (rf result (cast-bn input))))))
+       (rf result (->bn input))))))
 
 (def convert-wei
   (fn [rf]

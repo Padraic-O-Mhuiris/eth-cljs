@@ -2,7 +2,11 @@
   (:require
    [eth.db :as db]
    [cljs.reader :refer [read-string]]
-   [bignumber.js :as bn]))
+   [bignumber.js :as bn]
+   [eth-lib :refer [bytes]]))
+
+(defn obj->map [obj]
+  (js->clj obj :keywordize-keys true))
 
 (defn channel?
   [x]
@@ -19,8 +23,11 @@
 (defn preset->net-id [name]
   ((keyword name) db/presets))
 
-(defn string->number [x]
-  (read-string x))
+(defn string->number [s]
+  (read-string s))
 
-(defn cast-bn [x]
-  (bn. x))
+(defn string->hex [s]
+  (.. bytes (fromString s)))
+
+(defn ->bn [x]
+  (bn. (or x 0)))

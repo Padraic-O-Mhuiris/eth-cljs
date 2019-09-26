@@ -5,8 +5,8 @@
            :kovan "https://kovan.infura.io/v3/beabcde3dcb04fb0838ff6b3a1af9805"
            :main "https://mainnet.infura.io/v3/beabcde3dcb04fb0838ff6b3a1af9805"})
 
-(def configuration {:url (:main urls)
-                    :preset "main"})
+(def configuration {:url (:test urls)
+                    :preset "test"})
 
 (defn init []
   (start configuration))

@@ -12,7 +12,8 @@
                           :preset ""}
                  :initialized false
                  :rpc-id 0
-                 :client ""})
+                 :client ""
+                 :accounts []})
 
 (def state (atom init-state))
 

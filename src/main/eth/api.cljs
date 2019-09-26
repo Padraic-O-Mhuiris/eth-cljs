@@ -47,3 +47,5 @@
   ([] (block LATEST true))
   ([number full-tx]
    (rpc "eth_getBlockByNumber" (db/url) nil number full-tx)))
+
+(defn sign )

@@ -1,6 +1,6 @@
 (ns eth.currency
   (:require [bignumber.core :as bnc :refer [fixed]]
-            [eth.util :refer [cast-bn]]))
+            [eth.util :refer [->bn]]))
 
 ; -- currency units
 (def ETH {:type "ETH" :symbol "Ξ" :decimals 18})
@@ -14,7 +14,7 @@
 (defn round-to-precision [bn p]
   "returns a bignumber n which is fixed to p decimal places, 
    rounding all after the precision to 0"
-  (cast-bn (bnc/fixed bn p 1)))
+  (->bn (bnc/fixed bn p 1)))
 
 (defn process-amount
   [amount precision decimals]

@@ -3,6 +3,7 @@
    [cljs.core.async.macros :refer [go go-loop]])
   (:require [eth.net :as net]
             [eth.util :as util]
+            [eth.accounts :as accounts]
             [eth.api :as api]
             [eth.currency :as c]
             [eth.db :as db]
@@ -11,8 +12,6 @@
             [eth.channels :refer [error-chan]]
             [cljs.core.async :refer [<! put!]]
             [cljs.pprint :refer [pprint]]))
-
-(def x-address "0x6a7d7fe019737ae337a20344b9c6dd00725b66bc")
 
 (defn validate-config []
   (go
@@ -39,12 +38,14 @@
   (go
     (error-loop)
     (db/init config)
-    (<! (validate-config))
-    (.log js/console (<! (api/block-number)))
-    (.log js/console (<! (api/net-listening?)))
-    (.log js/console (<! (api/network-id)))
-    (.log js/console (<! (api/client-version)))
-    (.log js/console (<! (api/peer-count)))
-    (.log js/console (c/stringify (<! (api/gas-price))))
-    (.log js/console (c/stringify (<! (api/eth-balance x-address))))
-    (.log js/console (<! (api/block)))))
+    ;; (<! (validate-config))
+    ;; (.log js/console (util/buffer->hex (util/random-bytes)))
+    ;; (.log js/console (<! (api/block-number)))
+    ;; (.log js/console (<! (api/net-listening?)))
+    ;; (.log js/console (<! (api/network-id)))
+    ;; (.log js/console (<! (api/client-version)))
+    ;; (.log js/console (<! (api/peer-count)))
+    ;; (.log js/console (c/stringify (<! (api/gas-price))))
+    ;; (.log js/console (c/stringify (<! (api/eth-balance x-address))))
+    ;; (.log js/console (<! (api/block)))
+    ))
