@@ -2,6 +2,9 @@
   (:require
    [eth.db :as db]
    [eth.net :refer [rpc]]
+   [eth-lib :refer [bytes]]
+   [eth.logger :refer [log]]
+   [eth.util :refer [hex?]]
    [eth.transducers :refer [check-http-status
                             check-http-message
                             convert-number
@@ -48,4 +51,12 @@
   ([number full-tx]
    (rpc "eth_getBlockByNumber" (db/url) nil number full-tx)))
 
-(defn sign )
+(def eth-node-keys
+  {:privateKey "0x2d7bdb58c65480ac5aee00b20d3558fb18a916810d298ed97174cc01bb809cdd"
+   :address "0x9575eb2a7804c43f68dc7998eb0f250832df9f10"})
+
+(defn sign [address message]
+  (let [hash (if (hex? message)
+               message
+               (.. bytes (fromAscii message)))]
+    (rpc "eth_sign" (db/url) nil address hash)))

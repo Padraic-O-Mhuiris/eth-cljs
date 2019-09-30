@@ -6,7 +6,8 @@
    [cljs.core.async :refer [<!]]))
 
 (defn -log [s]
-  (.log js/console s))
+  (println)
+  (println s))
 
 (defn -log-error [e]
   (. js/console (error e)))
